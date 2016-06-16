@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.4
 #
-#   Copyright 2015 Atle ravndal
+#   Copyright 2015 Atle Ravndal
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -15,6 +15,11 @@
 #   limitations under the License.
 #
 
+__author__   = 'Atle Ravndal'
+__email__    = 'atleravndal@gmail.com'
+__url__      = 'https://github.com/wimpy87/sambus'
+__license__  = 'Apache License, Version 2.0'
+
 
 import minimalmodbus
 
@@ -24,6 +29,18 @@ minimalmodbus.TIMEOUT = 0.2
 
 
 class SAMbus( minimalmodbus.Instrument ):
+	"""Instrument class for System air\Villavent residential units. 
+    
+    Communicates via Modbus RTU protocol (via RS485), using the :mod:`minimalmodbus` Python module.
+    This driver is intended to enable control of the ventilation from the command line.
+    Args:
+        * portname (str): port name
+            * examples:
+            * OS X: '/dev/tty.usbserial'
+            * Linux: '/dev/ttyUSB0'
+            * Windows: '/com3'
+            
+        * slaveaddress (int): slave address in the range 1 to 247 (in decimal)"""
     
     
     def __init__(self, portname, slaveaddress):

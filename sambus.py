@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.4
 #
-#   Copyright 2015 Atle Ravndal
+#   Copyright 2016 Atle Ravndal
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -24,12 +24,13 @@ __license__  = 'Apache License, Version 2.0'
 import minimalmodbus
 
 minimalmodbus.BAUDRATE = 9600
-minimalmodbus.TIMEOUT = 0.2
+minimalmodbus.TIMEOUT = 0.3
+
 
 
 
 class SAMbus( minimalmodbus.Instrument ):
-	"""Instrument class for System air\Villavent residential units. 
+    """Instrument class for System air\Villavent residential units. 
     
     Communicates via Modbus RTU protocol (via RS485), using the :mod:`minimalmodbus` Python module.
     This driver is intended to enable control of the ventilation from the command line.
@@ -42,22 +43,18 @@ class SAMbus( minimalmodbus.Instrument ):
             
         * slaveaddress (int): slave address in the range 1 to 247 (in decimal)"""
     
-    
-    def __init__(self, portname, slaveaddress):
-        minimalmodbus.Instrument.__init__(self, portname, slaveaddress)
-
-
+    def __init__(self, portname, slaveadress):
+        minimalmodbus.Instrument.__init__(self, portname, slaveadress)
 
 
     ## Registers for fan control
-  
+
     def get_fan_lvl(self):
         """Return the fan speed level."""
         return self.read_register(100)
- 
- 
+
     def set_fan_lvl(self, value):
-        """Sett the fan speed level. value = 1-3"""
+        """Set fan speed. value = 1-3"""
         minimalmodbus._checkInt(value, minvalue=1, maxvalue=3, description='fan value')
         self.write_register(100, value)
         return self.read_register(100)
@@ -68,34 +65,28 @@ class SAMbus( minimalmodbus.Instrument ):
     def get_temp_lvl(self):
         """Return the temperatur level."""
         return self.read_register(206)
-  
-  
+
     def set_temp_lvl(self, value):
-        """sett the temperatur level. value = 0-5"""
+        """Set temperatur. value = 0-5"""
         minimalmodbus._checkInt(value, minvalue=0, maxvalue=5, description='temp value')
         self.write_register(206, value)
         return self.read_register(206)
-
 
     def get_supply_temp(self):
         """Supply air sensor"""
         return self.read_register(213, 1)
 
-
     def get_extr_temp(self):
         """Extract air sensor"""
         return self.read_register(214, 1)
-
 
     def get_exha_temp(self):
         """Exhaust air sensor"""
         return self.read_register(215, 1)
 
-
     def get_heat_temp(self):
         """Overheat sensor"""
         return self.read_register(216, 1)
-
 
     def get_out_temp(self):
         """Outdoor air sensor"""
@@ -112,7 +103,7 @@ class SAMbus( minimalmodbus.Instrument ):
         return model_list[model]
 
 
-	## Registers for the filter
+    ## Registers for the filter
 
     def get_filter_day(self):
         """Check days since last filter change"""
@@ -121,18 +112,11 @@ class SAMbus( minimalmodbus.Instrument ):
 
 
 
+    ########################
+    ## Testing the module ##
+    ########################
 
-#inst=('/dev/ttyUSB0', 1)
-
-#inst.debug = True
-
-
-
-	########################
-	## Testing the module ##
-	########################
-
-
+    
 if __name__ == '__main__':
 
     print ("TESTING SYSTEMAIR MODBUS MODULE")

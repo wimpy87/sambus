@@ -24,7 +24,7 @@ __license__  = 'Apache License, Version 2.0'
 import minimalmodbus
 
 minimalmodbus.BAUDRATE = 9600
-minimalmodbus.TIMEOUT = 0.3
+minimalmodbus.TIMEOUT = 0.5
 
 
 
@@ -49,12 +49,12 @@ class SAMbus( minimalmodbus.Instrument ):
 
     ## Registers for fan control
 
-    def get_fan_lvl(self):
-        """Return the fan speed level."""
+    def get_fan(self):
+        """Return the fan speed"""
         return self.read_register(100)
 
-    def set_fan_lvl(self, value):
-        """Set fan speed. value = 1-3"""
+    def set_fan(self, value):
+        """Set fan speed value = 1-3"""
         minimalmodbus._checkInt(value, minvalue=1, maxvalue=3, description='fan value')
         self.write_register(100, value)
         return self.read_register(100)
@@ -62,33 +62,35 @@ class SAMbus( minimalmodbus.Instrument ):
 
     ## Registers for heater control
 
-    def get_temp_lvl(self):
-        """Return the temperatur level."""
+    def get_temp(self):
+        """Return the temperatur"""
         return self.read_register(206)
 
-    def set_temp_lvl(self, value):
-        """Set temperatur. value = 0-5"""
+    def set_temp(self, value):
+        """Set temperatur value = 0-5"""
         minimalmodbus._checkInt(value, minvalue=0, maxvalue=5, description='temp value')
         self.write_register(206, value)
         return self.read_register(206)
 
-    def get_supply_temp(self):
+    ## Temperatur sensors
+
+    def get_supply(self):
         """Supply air sensor"""
         return self.read_register(213, 1)
 
-    def get_extr_temp(self):
+    def get_extr(self):
         """Extract air sensor"""
         return self.read_register(214, 1)
 
-    def get_exha_temp(self):
+    def get_exha(self):
         """Exhaust air sensor"""
         return self.read_register(215, 1)
 
-    def get_heat_temp(self):
+    def get_heat(self):
         """Overheat sensor"""
         return self.read_register(216, 1)
 
-    def get_out_temp(self):
+    def get_out(self):
         """Outdoor air sensor"""
         return self.read_register(217, 1)
 
@@ -110,6 +112,12 @@ class SAMbus( minimalmodbus.Instrument ):
         return self.read_register(601)
 
 
+    """
+    Example of usage: (reminder)
+    import sambus
+    inst = sambus.SAMbus('/dev/ttyUSB0', 1)
+    inst.set_fan(3)     
+    """
 
 
     ########################
@@ -131,13 +139,13 @@ if __name__ == '__main__':
     
     print ( 'Model                : {0}'.format (instr.get_system_type()))
     print ( 'Last filter change   : {0} Days'.format (instr.get_filter_day()))
-    print ( 'Temperatur setting   :   {0}'.format (instr.get_temp_lvl()))
-    print ( 'Fan Setting          :   {0}'.format (instr.get_fan_lvl()))
-    print ( 'Supply air temp      :  {0}°C'.format (instr.get_supply_temp()))
-    print ( 'Extract air temp     :  {0}°C'.format (instr.get_extr_temp()))   
-    print ( 'Exhaust air temp     :{0}°C'.format (instr.get_exha_temp()))  
-    print ( 'Overheat sensor      :  {0}°C'.format (instr.get_heat_temp()))
-    print ( 'Outdoor air          :   {0}°C'.format (instr.get_out_temp()))
+    print ( 'Temperatur setting   :   {0}'.format (instr.get_temp()))
+    print ( 'Fan Setting          :   {0}'.format (instr.get_fan()))
+    print ( 'Supply air temp      :  {0}°C'.format (instr.get_supply()))
+    print ( 'Extract air temp     :  {0}°C'.format (instr.get_extr()))   
+    print ( 'Exhaust air temp     :{0}°C'.format (instr.get_exha()))  
+    print ( 'Overheat sensor      :  {0}°C'.format (instr.get_heat()))
+    print ( 'Outdoor air          :   {0}°C'.format (instr.get_out()))
 
     print ('DONE!')
 
